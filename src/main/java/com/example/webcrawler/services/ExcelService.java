@@ -1,19 +1,20 @@
 package com.example.webcrawler.services;
 
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.List;
 
 @Service
 public class ExcelService {
 
-    public String createExcelFile(List<String> links, String fileName) {
+    public byte[] createExcelFile(List<String> links) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Links");
 
@@ -34,11 +35,11 @@ public class ExcelService {
         sheet.autoSizeColumn(0);
 
         // Writing the workbook to a file
-        try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
-            workbook.write(fileOut);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            workbook.write(bos);
         } catch (IOException e) {
             e.printStackTrace();
-            return "Error writing Excel file";
         } finally {
             try {
                 workbook.close();
@@ -47,6 +48,6 @@ public class ExcelService {
             }
         }
 
-        return "Excel file created successfully: " + fileName;
+        return bos.toByteArray();
     }
 }
