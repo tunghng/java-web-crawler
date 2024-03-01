@@ -28,38 +28,38 @@ public class CrawlerService {
         return links;
     }
 
+
     public Map<String, List<String>> getLinksBySection(String url) {
         Map<String, List<String>> sectionLinks = new HashMap<>();
         try {
             Document doc = Jsoup.connect(url).get();
-
-            // Assuming each section is identifiable by the <section> tag
-            Elements sections = doc.select("section");
-
+            // Handle specific sections and divs as per the structure.
+            Elements sections = doc.select("section.section_topstory, section.section_stream_home, section.section-podcast-v3, section.section_video_home, section.section_container");
             for (Element section : sections) {
-                // Use the section's class or id as a key. Adjust based on actual HTML structure.
-                String sectionKey = section.className(); // or use .id() for id attribute
-
-                List<String> links = new ArrayList<>();
-                Elements linkElements = section.select("a[href]");
-
-                for (Element linkElement : linkElements) {
-                    String link = linkElement.attr("abs:href");
-                    links.add(link);
-                }
-
-                // Only add sections that contain links
-                if (!links.isEmpty()) {
-                    sectionLinks.put(sectionKey, links);
+                String sectionKey = section.className().isEmpty() ? "Unnamed Section" : section.className();
+                // For each section, find divs by id for specific categories
+                Elements divs = section.select("div#kinhdoanh, div#batdongsan, div#thethao, div.box-giaitri-v2, div#suckhoe, div#doisong, div#giaoduc, section#khoahoc_sohoa, div#automation_Video, section#block_hv_dulich, section#block_hv_xe");
+                for (Element div : divs) {
+                    String divKey = div.id(); // Use id as the key
+                    List<String> links = new ArrayList<>();
+                    Elements linkElements = div.select("a[href]");
+                    for (Element linkElement : linkElements) {
+                        String link = linkElement.attr("abs:href");
+                        links.add(link);
+                    }
+                    if (!links.isEmpty()) {
+                        // Include the div id in the section key to differentiate between different divs within the same section
+                        sectionLinks.put(sectionKey + " -> " + divKey, links);
+                    }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println(Arrays.asList(sectionLinks));
+        System.out.println(sectionLinks);
         return sectionLinks;
-
     }
+
+
 }
 
