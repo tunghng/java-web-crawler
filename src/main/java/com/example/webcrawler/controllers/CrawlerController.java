@@ -21,6 +21,7 @@ public class CrawlerController {
 
     @GetMapping("/exportLinks")
     public ResponseEntity<byte[]> exportLinks(@RequestParam String url) {
+        crawlerService.getLinksBySection(url);
         List<String> links = crawlerService.getAllLinks(url);
         byte[] excelFile = excelService.createExcelFile(links);
 
