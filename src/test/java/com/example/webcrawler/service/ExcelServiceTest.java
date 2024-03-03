@@ -6,6 +6,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -15,11 +18,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class ExcelServiceTest {
+    @InjectMocks
+    private ExcelService excelService;
 
     @Test
     void createExcelFileTest() throws IOException {
-        ExcelService excelService = new ExcelService();
         HashMap<String, List<String>> sectionLinksMap = new HashMap<>();
         sectionLinksMap.put("Test Section", List.of("http://example.com"));
 
