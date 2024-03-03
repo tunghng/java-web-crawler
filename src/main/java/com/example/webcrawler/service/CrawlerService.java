@@ -47,6 +47,7 @@ public class CrawlerService {
             // Define your selectors here
             String[][] selectors = {
                     {"section.section_topstory", "Top Story"},
+                    {"div#automation_TV0", "Top Story"},
                     {"div#kinhdoanh", "Kinh Doanh"},
                     {"div#batdongsan", "Bất Động Sản"},
                     {"div#thethao", "Thể Thao"},
@@ -55,10 +56,17 @@ public class CrawlerService {
                     {"div#doisong", "Đời Sống"},
                     {"div#giaoduc", "Giáo Dục"},
                     {"section.section-podcast-v3", "Podcast"},
-                    {"section#_khoahoc_sohoa", "Khoa Học & Số Hoá"},
+                    {"section#khoahoc_sohoa", "Khoa Học & Số Hoá"},
                     {"section.section_video_home", "Video"},
+                    {"hgroup.thoisu", "Thời Sự"},
                     {"section#block_hv_dulich", "Du Lịch"},
-                    {"section#block_hv_xe", "Xe"}
+                    {"section#block_hv_xe", "Xe"},
+                    {"div.box-tamsu-home", "Tâm Sự"},
+                    {"div.box-tamsu-home", "Tâm Sự"},
+                    {"div.automation_Photo", "Ảnh"},
+                    {"div.box-xemnhieu", "Xem Nhiều"},
+                    {"div.box-news-other-site", "Trang Khác"},
+                    {"div.wrap-box-business", "Thông Tin Doanh Nghiệp"},
             };
 
             for (String[] selector : selectors) {
@@ -72,6 +80,34 @@ public class CrawlerService {
                 }
                 linksMap.put(selector[1], links);
             }
+
+            String[][] specialSelectors = {
+                    {"hgroup.thoisu", "Thời Sự"},
+                    {"hgroup.thegioi", "Thế Giới"},
+                    {"hgroup.phapluat", "Pháp Luật"},
+                    {"hgroup.ykien", "Ý Kiến"},
+                    {"hgroup.cuoi", "Thư Giãn"},
+                    {"hgroup.infographics", "Infographics"},
+            };
+
+            for (String[] specialSelector : specialSelectors) {
+                List<WebElement> hgroupElements = driver.findElements(By.cssSelector(specialSelector[0]));
+                List<String> links = new ArrayList<>();
+                for (WebElement hgroupElement : hgroupElements) {
+                    WebElement parentDiv = hgroupElement.findElement(By.xpath("./ancestor::div[contains(@class, 'box-category')]"));
+                    List<WebElement> linkElements = parentDiv.findElements(By.tagName("a"));
+
+                    for (WebElement linkElement : linkElements) {
+                        String href = linkElement.getAttribute("href");
+                        if (href != null && !href.isEmpty()) {
+                            links.add(href);
+                        }
+                    }
+                }
+
+                linksMap.put(specialSelector[1], links);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
