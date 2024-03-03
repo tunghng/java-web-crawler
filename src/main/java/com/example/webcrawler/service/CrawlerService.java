@@ -33,13 +33,13 @@ public class CrawlerService {
     }
 
 
-    public static Map<String, List<String>> getLinksBySection(String url) {
+    public static HashMap<String, List<String>> getLinksBySection(String url) {
         System.setProperty("webdriver.chrome.driver", "/Users/htungg/Documents/java-web-crawler/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless"); // Runs Chrome in headless mode.
         WebDriver driver = new ChromeDriver(options);
 
-        Map<String, List<String>> linksMap = new HashMap<>();
+        HashMap<String, List<String>> linksMap = new HashMap<>();
 
         try {
             driver.get(url);

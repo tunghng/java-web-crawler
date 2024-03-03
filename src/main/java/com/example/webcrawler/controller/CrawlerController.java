@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CrawlerController {
@@ -21,8 +23,7 @@ public class CrawlerController {
 
     @GetMapping("/exportLinks")
     public ResponseEntity<byte[]> exportLinks(@RequestParam String url) {
-        crawlerService.getLinksBySection(url);
-        List<String> links = crawlerService.getAllLinks(url);
+        HashMap<String, List<String>> links = crawlerService.getLinksBySection(url);
         byte[] excelFile = excelService.createExcelFile(links);
 
         HttpHeaders headers = new HttpHeaders();
