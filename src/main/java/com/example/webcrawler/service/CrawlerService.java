@@ -45,26 +45,24 @@ public class CrawlerService {
             driver.get(url);
 
             // Define your selectors here
-            String[] selectors = {
-                    "section.section_topstory",
-                    "div#kinhdoanh",
-                    "div#batdongsan",
-                    "div#thethao",
-                    "div.box-giaitri-v2",
-                    "div#suckhoe",
-                    "div#doisong",
-                    "div#giaoduc",
-                    "section.section-podcast-v3",
-                    "section.section_container",
-                    "section#_khoahoc_sohoa",
-                    "section.section_video_home",
-                    "div#automation_Video",
-                    "section#block_hv_dulich",
-                    "section#block_hv_xe"
+            String[][] selectors = {
+                    {"section.section_topstory", "Top Story"},
+                    {"div#kinhdoanh", "Kinh Doanh"},
+                    {"div#batdongsan", "Bất Động Sản"},
+                    {"div#thethao", "Thể Thao"},
+                    {"div.box-giaitri-v2", "Giải Trí"},
+                    {"div#suckhoe", "Sức Khoẻ"},
+                    {"div#doisong", "Đời Sống"},
+                    {"div#giaoduc", "Giáo Dục"},
+                    {"section.section-podcast-v3", "Podcast"},
+                    {"section#_khoahoc_sohoa", "Khoa Học & Số Hoá"},
+                    {"section.section_video_home", "Video"},
+                    {"section#block_hv_dulich", "Du Lịch"},
+                    {"section#block_hv_xe", "Xe"}
             };
 
-            for (String selector : selectors) {
-                List<WebElement> elements = driver.findElements(By.cssSelector(selector + " a"));
+            for (String[] selector : selectors) {
+                List<WebElement> elements = driver.findElements(By.cssSelector(selector[0] + " a"));
                 List<String> links = new ArrayList<>();
                 for (WebElement element : elements) {
                     String href = element.getAttribute("href");
@@ -72,14 +70,13 @@ public class CrawlerService {
                         links.add(href);
                     }
                 }
-                linksMap.put(selector, links);
+                linksMap.put(selector[1], links);
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             driver.quit();
         }
-        System.out.println(Arrays.asList(linksMap));
         return linksMap;
     }
 
