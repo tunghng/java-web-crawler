@@ -1,7 +1,7 @@
-package com.example.webcrawler.controllers;
+package com.example.webcrawler.controller;
 
-import com.example.webcrawler.services.CrawlerService;
-import com.example.webcrawler.services.ExcelService;
+import com.example.webcrawler.service.CrawlerService;
+import com.example.webcrawler.service.ExcelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
