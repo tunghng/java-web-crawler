@@ -1,9 +1,15 @@
 package com.example.webcrawler.services;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,35 +35,54 @@ public class CrawlerService {
     }
 
 
-    public Map<String, List<String>> getLinksBySection(String url) {
-        Map<String, List<String>> sectionLinks = new HashMap<>();
+    public static Map<String, List<String>> getLinksBySection(String url) {
+        System.setProperty("webdriver.chrome.driver", "/Users/htungg/Documents/java-web-crawler/chromedriver");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless"); // Runs Chrome in headless mode.
+        WebDriver driver = new ChromeDriver(options);
+
+        Map<String, List<String>> linksMap = new HashMap<>();
+
         try {
-            Document doc = Jsoup.connect(url).get();
-            // Handle specific sections and divs as per the structure.
-            Elements sections = doc.select("section.section_topstory, section.section_stream_home, section.section-podcast-v3, section.section_video_home, section.section_container");
-            for (Element section : sections) {
-                String sectionKey = section.className().isEmpty() ? "Unnamed Section" : section.className();
-                // For each section, find divs by id for specific categories
-                Elements divs = section.select("div#kinhdoanh, div#batdongsan, div#thethao, div.box-giaitri-v2, div#suckhoe, div#doisong, div#giaoduc, section#khoahoc_sohoa, div#automation_Video, section#block_hv_dulich, section#block_hv_xe");
-                for (Element div : divs) {
-                    String divKey = div.id(); // Use id as the key
-                    List<String> links = new ArrayList<>();
-                    Elements linkElements = div.select("a[href]");
-                    for (Element linkElement : linkElements) {
-                        String link = linkElement.attr("abs:href");
-                        links.add(link);
-                    }
-                    if (!links.isEmpty()) {
-                        // Include the div id in the section key to differentiate between different divs within the same section
-                        sectionLinks.put(sectionKey + " -> " + divKey, links);
+            driver.get(url);
+
+            // Define your selectors here
+            String[] selectors = {
+                    "section.section_topstory",
+                    "div#kinhdoanh",
+                    "div#batdongsan",
+                    "div#thethao",
+                    "div.box-giaitri-v2",
+                    "div#suckhoe",
+                    "div#doisong",
+                    "div#giaoduc",
+                    "section.section-podcast-v3",
+                    "section.section_container",
+                    "section#_khoahoc_sohoa",
+                    "section.section_video_home",
+                    "div#automation_Video",
+                    "section#block_hv_dulich",
+                    "section#block_hv_xe"
+            };
+
+            for (String selector : selectors) {
+                List<WebElement> elements = driver.findElements(By.cssSelector(selector + " a"));
+                List<String> links = new ArrayList<>();
+                for (WebElement element : elements) {
+                    String href = element.getAttribute("href");
+                    if (href != null && !href.isEmpty()) {
+                        links.add(href);
                     }
                 }
+                linksMap.put(selector, links);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            driver.quit();
         }
-        System.out.println(sectionLinks);
-        return sectionLinks;
+        System.out.println(Arrays.asList(linksMap));
+        return linksMap;
     }
 
 
