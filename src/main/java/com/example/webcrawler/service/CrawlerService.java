@@ -1,8 +1,5 @@
 package com.example.webcrawler.service;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,40 +7,34 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class CrawlerService {
-    public List<String> getAllLinks(String url) {
-        List<String> links = new ArrayList<>();
-        try {
-            Document doc = Jsoup.connect(url).get();
-            Elements linkElements = doc.select("a[href]");
+    private WebDriver driver;
 
-            linkElements.forEach(element -> {
-                String link = element.attr("abs:href");
-                links.add(link);
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return links;
+    // Setter for WebDriver to allow injecting mock driver for tests
+    public void setDriver(WebDriver driver) {
+        this.driver = driver;
     }
 
+    private WebDriver getDriver() {
+        if (driver == null) {
+            System.setProperty("webdriver.chrome.driver", "./chromedriver");
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless");
+            driver = new ChromeDriver(options);
+        }
+        return driver;
+    }
 
-    public static HashMap<String, List<String>> getLinksBySection(String url) {
-        System.setProperty("webdriver.chrome.driver", "/Users/htungg/Documents/java-web-crawler/chromedriver");
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // Runs Chrome in headless mode.
-        WebDriver driver = new ChromeDriver(options);
-
+    public HashMap<String, List<String>> getLinksBySection(String url) {
+        WebDriver localDriver = getDriver();
         HashMap<String, List<String>> linksMap = new HashMap<>();
-
         try {
-            driver.get(url);
-
+            localDriver.get(url);
             // Define your selectors here
             String[][] selectors = {
                     {"section.section_topstory", "Top Story"},
@@ -107,15 +98,13 @@ public class CrawlerService {
 
                 linksMap.put(specialSelector[1], links);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            driver.quit();
+            if (this.driver == null) { // Only quit driver if it wasn't set externally
+                localDriver.quit();
+            }
         }
         return linksMap;
     }
-
-
 }
-
