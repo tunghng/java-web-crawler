@@ -1,7 +1,7 @@
 package com.example.webcrawler.controller;
 
-import com.example.webcrawler.service.CrawlerService;
-import com.example.webcrawler.service.ExcelService;
+import com.example.webcrawler.service.CrawlerServiceImpl;
+import com.example.webcrawler.service.ExcelServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +27,10 @@ class CrawlerControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private CrawlerService crawlerService;
+    private CrawlerServiceImpl crawlerServiceImpl;
 
     @MockBean
-    private ExcelService excelService;
+    private ExcelServiceImpl excelServiceImpl;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
@@ -45,8 +45,8 @@ class CrawlerControllerTest {
         linksMap.put("Section1", Arrays.asList("http://example.com/link1", "http://example.com/link2"));
         byte[] mockExcelFile = new byte[]{1, 2, 3, 4}; // Dummy Excel file content
 
-        given(crawlerService.getLinksBySection(testUrl)).willReturn(linksMap);
-        given(excelService.createExcelFile(linksMap)).willReturn(mockExcelFile);
+        given(crawlerServiceImpl.getLinksBySection(testUrl)).willReturn(linksMap);
+        given(excelServiceImpl.createExcelFile(linksMap)).willReturn(mockExcelFile);
 
         // Perform request and expect a specific status, content type, and header
         mockMvc.perform(get("/exportLinks").param("url", testUrl))

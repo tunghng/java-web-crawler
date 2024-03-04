@@ -14,10 +14,10 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class CrawlerServiceTest {
+public class CrawlerServiceImplTest {
 
     private WebDriver driver;
-    private CrawlerService crawlerService;
+    private CrawlerServiceImpl crawlerServiceImpl;
 
     @BeforeEach
     public void setUp() {
@@ -30,15 +30,15 @@ public class CrawlerServiceTest {
         driver = new ChromeDriver(options);
 
         // Initialize the CrawlerService with the actual driver
-        crawlerService = new CrawlerService();
-        crawlerService.setDriver(driver);
+        crawlerServiceImpl = new CrawlerServiceImpl();
+        crawlerServiceImpl.setDriver(driver);
     }
 
     @Test
     public void getLinksBySectionIntegrationTest() {
         // Use a real, preferably stable and legal to crawl, URL for testing
         String testUrl = "https://vnexpress.net/";
-        HashMap<String, List<String>> linksMap = crawlerService.getLinksBySection(testUrl);
+        HashMap<String, List<String>> linksMap = crawlerServiceImpl.getLinksBySection(testUrl);
 
         // Assert that the linksMap is not empty or contains expected values
         // The specific assertions will depend on the structure of the website and your requirements

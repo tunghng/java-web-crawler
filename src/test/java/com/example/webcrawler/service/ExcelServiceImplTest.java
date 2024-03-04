@@ -1,6 +1,5 @@
 package com.example.webcrawler.service;
 
-import com.example.webcrawler.service.ExcelService;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -19,16 +18,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class ExcelServiceTest {
+class ExcelServiceImplTest {
     @InjectMocks
-    private ExcelService excelService;
+    private ExcelServiceImpl excelServiceImpl;
 
     @Test
     void createExcelFileTest() throws IOException {
         HashMap<String, List<String>> sectionLinksMap = new HashMap<>();
         sectionLinksMap.put("Test Section", List.of("http://example.com"));
 
-        byte[] excelContent = excelService.createExcelFile(sectionLinksMap);
+        byte[] excelContent = excelServiceImpl.createExcelFile(sectionLinksMap);
 
         // Use Apache POI to read the Excel file from the byte array
         try (InputStream is = new ByteArrayInputStream(excelContent)) {

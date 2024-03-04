@@ -1,7 +1,7 @@
 package com.example.webcrawler.controller;
 
-import com.example.webcrawler.service.CrawlerService;
-import com.example.webcrawler.service.ExcelService;
+import com.example.webcrawler.service.CrawlerServiceImpl;
+import com.example.webcrawler.service.ExcelServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,14 +16,14 @@ import java.util.List;
 @RestController
 public class CrawlerController {
     @Autowired
-    private CrawlerService crawlerService;
+    private CrawlerServiceImpl crawlerServiceImpl;
     @Autowired
-    private ExcelService excelService;
+    private ExcelServiceImpl excelServiceImpl;
 
     @GetMapping("/exportLinks")
     public ResponseEntity<byte[]> exportLinks(@RequestParam String url) {
-        HashMap<String, List<String>> links = crawlerService.getLinksBySection(url);
-        byte[] excelFile = excelService.createExcelFile(links);
+        HashMap<String, List<String>> links = crawlerServiceImpl.getLinksBySection(url);
+        byte[] excelFile = excelServiceImpl.createExcelFile(links);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=ExportedLinks.xlsx");
