@@ -17,4 +17,7 @@ public class CrawledData {
     private Long id;
     private String url;
     private String section;
+    @ManyToOne
+    @JoinColumn(name = "crawl_attempt_id")
+    private CrawlAttempt crawlAttempt;
 }
