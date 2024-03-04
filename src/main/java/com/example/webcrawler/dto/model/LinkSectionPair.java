@@ -1,4 +1,4 @@
-package com.example.webcrawler.model;
+package com.example.webcrawler.dto.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

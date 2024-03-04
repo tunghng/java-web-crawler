@@ -8,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class CrawlerService {
         this.driver = driver;
     }
 
-    private WebDriver getDriver() {
+    public WebDriver getDriver() {
         if (driver == null) {
             System.setProperty("webdriver.chrome.driver", "./chromedriver");
             ChromeOptions options = new ChromeOptions();
@@ -54,7 +55,7 @@ public class CrawlerService {
                     {"section#block_hv_xe", "Xe"},
                     {"div.box-tamsu-home", "Tâm Sự"},
                     {"div.box-tamsu-home", "Tâm Sự"},
-                    {"div.automation_Photo", "Ảnh"},
+                    {"div#automation_Photo", "Ảnh"},
                     {"div.box-xemnhieu", "Xem Nhiều"},
                     {"div.box-news-other-site", "Trang Khác"},
                     {"div.wrap-box-business", "Thông Tin Doanh Nghiệp"},
